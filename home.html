@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полный математический тест</title>
+    <link rel="stylesheet" href="static/css/math.css">
+</head>
+<body>
+    <div class="header">
+        <div class="user-info">
+            <span>Пользователь: {{ username }} (класс {{ class_name }})</span>
+            <div class="score-info">Очки: {{ score }}</div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
+        <a href="{{ url_for('restart') }}" class="restart-btn">Перезапустить тест</a>
+    </div>
+
+    <div class="container">
+        <h1>Математические задания</h1>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress" style="width: {{ progress }}%"></div>
+            </div>
+            <p>Задание {{ task_number }} из {{ total_tasks }}</p>
+        </div>
+
+        {% if current_task.type == 'system' %}
+            <div class="task-system">
+                <h2>Решите задачу:</h2>
+                <div class="system-equations">
+                    {{ current_task.task|safe }}
+                </div>
+            </div>
+        {% else %}
+            <h2 class="task-question">Задание {{ current_task.number }}: {{ current_task.task }} = ?</h2>
+        {% endif %}
+
+        <form method="post">
+            <input type="text" name="answer" placeholder="Введите ваш ответ" required
+                   autofocus>
+            <button type="submit" class="submit-btn">Проверить ответ</button>
+        </form>
+
+        {% if result %}
+            <div class="result-message {{ 'correct' if 'Правильно' in result else 'incorrect' }}">
+                {{ result }}
+            </div>
+        {% endif %}
+
+        <div class="task-info">
+            <p><strong>Тип задания:</strong>
+                {% if current_task.type == 'arithmetic' %}Арифметика
+                {% elif current_task.type == 'equation' %}Уравнение
+                {% elif current_task.type == 'system' %}Система уравнений
+                {% elif current_task.type == 'complex' %}Сложное выражение
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

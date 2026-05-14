@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты теста</title>
+    <link rel="stylesheet" href="static/css/math.css">
+</head>
+<body>
+    <div class="header">
+        <div class="user-info">
+            <span>Пользователь: {{ username }} (класс {{ class_name }})</span>
+            <div class="score-info">Итоговые очки: {{ score }}</div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
+        <a href="{{ url_for('restart') }}" class="restart-btn">Пройти тест заново</a>
+    </div>
+
+    <div class="container">
+        <h1>Результаты теста</h1>
+
+        <div class="summary-box">
+            <h2>Итоги</h2>
+            <p>Всего заданий: <strong>{{ total }}</strong></p>
+            <p>Правильных ответов: <strong>{{ correct }}</strong></p>
+            <p>Набрано очков: <strong>{{ correct * 10 }}</strong></p>
+            <p>Процент выполнения: <strong>{{ "%.1f"|format(correct / total * 100) }}%</strong></p>
+        </div>
+
+        <div class="results-table">
+            <table>
+                <thead>
+                    <tr>
+                <th>№</th>
+                <th>Задание</th>
+                <th>Ваш ответ</th>
+                <th>Правильный ответ</th>
+                <th>Результат</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr class="{{ 'correct-row' if result.is_correct else 'incorrect-row' }}">
+                    <td>{{ result.number }}</td>
+                    <td>
+                {% if result.type == 'system' %}
+                    <div class="system-task">{{ result.task|safe }}</div>
+                {% else %}
+                    {{ result.task }}
+                {% endif %}
+            </td>
+            <td>
+                {% if result.user_answer is not none %}
+                    {{ result.user_answer }}
+                {% else %}
+                    Не отвечено
+                {% endif %}
+            </td>
+            <td>{{ result.correct_answer }}</td>
+            <td>
+                {% if result.is_correct %}
+                    <span class="status correct">Правильно</span>
+                {% else %}
+                    <span class="status incorrect">Неправильно</span>
+                {% endif %}
+            </td>
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="feedback-message">
+    {% if correct / total >= 0.8 %}
+        <p class="success">Отлично! Вы прекрасно справились с тестом!</p>
+    {% elif correct / total >= 0.6 %}
+        <p class="good">Хорошо! Есть небольшие ошибки, но вы на верном пути.</p>
+    {% else %}
+        <p class="improve">Есть над чем поработать. Попробуйте пройти тест ещё раз!</p>
+    {% endif %}
+</div>
+
+</div>
+</body>
+</html>

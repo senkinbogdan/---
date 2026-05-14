@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полный математический тест</title>
+    <link rel="stylesheet" href="static/css/math.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Математические задания</h1>
+        <h2>Вопрос: {{num1}} {{operation}} {{num2}} = ?</h2>
+        <form method="post">
+            <input type="text" name="answer" placeholder="Введите ваш ответ" required>
+            <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+            <button type="submit">Проверить</button>
+        </form>
+        {% if result is not none %}
+            <h3 class="{{ 'correct' if result == 'Правильно' else 'incorrect' }}">{{result}}</h3>
+        {% endif %}
+    </div>
+</body>
+</html>
